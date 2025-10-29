@@ -23,15 +23,16 @@ namespace E_Commers.Domain.Contracts.DataSeeding
             this.context = context;
         }
 
-        public void seeding()
+        public async Task seedingAsync()
         {
-            if (context.Database.GetPendingMigrations().Any())
+            var mig = await context.Database.GetAppliedMigrationsAsync();
+            if (mig.Any())
             {
                 context.Database.Migrate();
             }
             if (!context.brands.Any())
             {
-                var brands = File.ReadAllText(@"..\InfraStructure\Ecpmmerce.Persistance\Data\brands.json");
+                var brands = await File.ReadAllTextAsync(@"..\InfraStructure\Ecpmmerce.Persistance\Data\brands.json");
                 var productbrands = JsonSerializer.Deserialize<List<Brand>>(brands);
                 if(productbrands is not null&& productbrands.Any())
                 {
@@ -40,7 +41,7 @@ namespace E_Commers.Domain.Contracts.DataSeeding
             }
             if (!context.types.Any())
             {
-                var types = File.ReadAllText(@"..\InfraStructure\Ecpmmerce.Persistance\Data\types.json");
+                var types = await File.ReadAllTextAsync(@"..\InfraStructure\Ecpmmerce.Persistance\Data\types.json");
                 var producttypes = JsonSerializer.Deserialize<List<ProductType>>(types);
                 if (producttypes is not null && producttypes.Any())
                 {
@@ -51,7 +52,7 @@ namespace E_Commers.Domain.Contracts.DataSeeding
 
             if (!context.products.Any())
             {
-                var a = File.ReadAllText(@"..\InfraStructure\Ecpmmerce.Persistance\Data\products.json");
+                var a = await File.ReadAllTextAsync(@"..\InfraStructure\Ecpmmerce.Persistance\Data\products.json");
                 var productelement = JsonSerializer.Deserialize<List<Product>>(a);
                 if (productelement is not null && productelement.Any())
                 {

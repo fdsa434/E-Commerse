@@ -2,8 +2,13 @@
 
 
 using E_Commers.Domain.Contracts.DataSeeding;
+using E_Commers.Domain.Contracts.IUOW;
+using E_Commerse.ServiceAbstraction.IsurvaceManager;
+using E_Commerse.Serviceimplemention.Profiles;
+using E_Commerse.Serviceimplemention.Serviceimplemetition.ServiceManager;
 using Ecpmmerce.Persistance.Context.StorDBContext;
 using Ecpmmerce.Persistance.Context.StorDBContext;
+using Ecpmmerce.Persistance.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerse.Web
@@ -21,10 +26,16 @@ namespace E_Commerse.Web
             builder.Services.AddOpenApi();
             builder.Services.AddDbContext<StorDBContext>(o=>o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IserviceManager, ServiceManager>();
+
+            builder.Services.AddAutoMapper(p=>p.AddMaps(typeof(ProductProfile).Assembly));
+
+
             var app = builder.Build();
             var scope = app.Services.CreateScope();
             var objectscope = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-            objectscope.seeding();
+            objectscope.seedingAsync();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -34,7 +45,7 @@ namespace E_Commerse.Web
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
 
