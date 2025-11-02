@@ -1,4 +1,5 @@
-﻿using E_Commers.Domain.Contracts.Reposatory.IGenericRepo;
+﻿using E_Commers.Domain.Contracts.ISpecification;
+using E_Commers.Domain.Contracts.Reposatory.IGenericRepo;
 using E_Commers.Domain.Models;
 using Ecpmmerce.Persistance.Context.StorDBContext;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,20 @@ namespace Ecpmmerce.Persistance.Reposatory.GenericReposatoty
             return await context.Set<tentity>().ToListAsync();
 
         }
+        public async Task<IEnumerable<tentity>> getallspecificationrepo(ISpecification<tentity, tkey> spec)
+        {
+            var basequery = context.Set<tentity>();
+            return await SpecificationEvaluator.generatequery<tentity, tkey>(basequery, spec).ToListAsync();
+        }
+        public async Task<tentity> getallspecificationByidrepo(ISpecification<tentity, tkey> spec)
+        {
+
+            var basequery = context.Set<tentity>();
+            return await SpecificationEvaluator.generatequery<tentity, tkey>(basequery, spec).FirstOrDefaultAsync();
+
+        }
+
+       
 
         public void UpdateEntity(tentity item)
         {

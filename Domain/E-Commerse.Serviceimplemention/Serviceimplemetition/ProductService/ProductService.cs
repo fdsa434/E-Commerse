@@ -4,7 +4,10 @@ using E_Commers.Domain.Models.BrandModel;
 using E_Commers.Domain.Models.Products;
 using E_Commers.Domain.Models.Type_Model;
 using E_commerse.Shared.DTOS.ProductDtos;
+using E_commerse.Shared.ProductQueryParam;
+using E_commerse.Shared.Sorting;
 using E_Commerse.ServiceAbstraction.IService.IProductService;
+using Ecpmmerce.Persistance.Specification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +21,7 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ProductService
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductService(IUnitOfWork unitOfWork,IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
@@ -26,19 +29,21 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ProductService
 
         public async Task<IEnumerable<GetBrandDto>> GetProductBrandService()
         {
-           var productbrands= await unitOfWork.Gneraterepo<Brand, int>().getallrepo();
-           return mapper.Map<IEnumerable<GetBrandDto>>(productbrands);
+            var productbrands = await unitOfWork.Gneraterepo<Brand, int>().getallrepo();
+            return mapper.Map<IEnumerable<GetBrandDto>>(productbrands);
         }
 
         public async Task<GetProductDto> GetProductByIdService(int Id)
         {
-            var products = await unitOfWork.Gneraterepo<Product, int>().getallbuidrepo(Id);
+            var specification = new ProductSpecification(Id);
+            var products = await unitOfWork.Gneraterepo<Product, int>().getallspecificationByidrepo(specification);
             return mapper.Map<GetProductDto>(products);
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetProductService()
+        public async Task<IEnumerable<GetProductDto>> GetProductService(ProductQueryParam param)
         {
-            var product = await unitOfWork.Gneraterepo<Product, int>().getallrepo();
+            var specification = new ProductSpecification(param);
+            var product = await unitOfWork.Gneraterepo<Product, int>().getallspecificationrepo(specification);
             return mapper.Map<IEnumerable<GetProductDto>>(product);
         }
 
@@ -48,6 +53,5 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ProductService
             return mapper.Map<IEnumerable<GetTypeDto>>(producttypes);
         }
 
-      
     }
 }

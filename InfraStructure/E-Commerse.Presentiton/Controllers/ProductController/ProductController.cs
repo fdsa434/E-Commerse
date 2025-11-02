@@ -1,4 +1,6 @@
 ﻿using E_commerse.Shared.DTOS.ProductDtos;
+using E_commerse.Shared.ProductQueryParam;
+using E_commerse.Shared.Sorting;
 using E_Commerse.ServiceAbstraction.IsurvaceManager;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,9 +15,9 @@ namespace E_Commerse.Presentiton.Controllers.ProductController
     public class ProductController(IserviceManager servicemanager) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetProductDto>>> getallproduct()
+        public async Task<ActionResult<IEnumerable<GetProductDto>>> getallproduct(ProductQueryParam param)
         {
-            var res = await servicemanager.productservice.GetProductService();
+            var res = await servicemanager.productservice.GetProductService( param);
             return Ok(res);
         }
 
