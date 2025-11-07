@@ -3,12 +3,15 @@
 
 using E_Commers.Domain.Contracts.DataSeeding;
 using E_Commers.Domain.Contracts.IUOW;
+using E_commerse.Shared;
+using E_commerse.Shared.ErrorModels;
 using E_Commerse.ServiceAbstraction.IsurvaceManager;
 using E_Commerse.Serviceimplemention.Profiles;
 using E_Commerse.Serviceimplemention.Serviceimplemetition.ServiceManager;
 using Ecpmmerce.Persistance.Context.StorDBContext;
 using Ecpmmerce.Persistance.Context.StorDBContext;
 using Ecpmmerce.Persistance.UnitOfWork;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerse.Web
@@ -31,7 +34,23 @@ namespace E_Commerse.Web
 
             builder.Services.AddAutoMapper(p=>p.AddMaps(typeof(ProductProfile).Assembly));
 
-
+            builder.Services.Configure<ApiBehaviorOptions>((options) =>
+            {
+                options.InvalidModelStateResponseFactory = (context) =>
+                {
+                    var errors = context.ModelState.Where(m => m.Value.Errors.Any())
+                      .Select(m => new ValidationErorr()
+                      {
+                          feild = m.Key,
+                          errors = m.Value.Errors.Select(e => e.ErrorMessage)
+                      });
+                    var response = new ValidationErrortoreturn()
+                    {
+                        validationerrors=errors
+                    };
+                    return new BadRequestObjectResult(response);
+                };
+            });
             var app = builder.Build();
             var scope = app.Services.CreateScope();
             var objectscope = scope.ServiceProvider.GetRequiredService<IDataSeeding>();

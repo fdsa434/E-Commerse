@@ -25,6 +25,17 @@ namespace E_Commerse.Serviceimplemention.Specification
 
         public Expression<Func<tentity, object>> OrderbuDesc { get; private set; }
 
+        public int take { get; private set; }
+
+        public int skip { get; private set; }
+        public bool ispaginated { get;  set; }
+
+        public void Addpagination(int pageindex,int pagesize)
+        {
+            ispaginated = true;
+            take = pagesize;
+            skip = (pageindex - 1) * pagesize;
+        }
         public void OrderbuAscfun(Expression<Func<tentity, object>> OrderbuAsc)
         {
             this.OrderbuAsc = OrderbuAsc;

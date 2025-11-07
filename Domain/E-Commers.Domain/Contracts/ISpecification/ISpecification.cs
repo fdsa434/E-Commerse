@@ -13,6 +13,10 @@ namespace E_Commers.Domain.Contracts.ISpecification
         public Expression<Func<tentity,bool>> cretiria { get; }
         public Expression<Func<tentity, Object>> OrderbuAsc { get; }
         public Expression<Func<tentity, Object>> OrderbuDesc { get; }
+        public int take { get; }
+        public int skip { get; }
+        public bool ispaginated { get; set; }
+
 
         public List<Expression<Func<tentity, object>>> includes { get; }
 

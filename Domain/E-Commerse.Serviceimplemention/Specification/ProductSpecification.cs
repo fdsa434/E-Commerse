@@ -19,6 +19,7 @@ namespace Ecpmmerce.Persistance.Specification
         {
             Addinclude(p => p.Productbrand);
             Addinclude(p => p.ProductType);
+            Addpagination(pageindex: param.PageIndex, pagesize: param.PageIndex);
             switch(param.sorttype)
             {
                 case ProductSorting.priceasc:

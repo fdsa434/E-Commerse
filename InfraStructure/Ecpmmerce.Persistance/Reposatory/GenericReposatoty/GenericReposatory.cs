@@ -61,5 +61,11 @@ namespace Ecpmmerce.Persistance.Reposatory.GenericReposatoty
             context.Set<tentity>().Update(item);
 
         }
+
+        public async Task<int> getcountspecificationrepo(ISpecification<tentity, tkey> spec)
+        {
+            var basequery = context.Set<tentity>();
+            return await SpecificationEvaluator.generatequery<tentity, tkey>(basequery, spec).CountAsync();
+        }
     }
 }

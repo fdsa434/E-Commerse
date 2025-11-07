@@ -28,6 +28,10 @@ namespace Ecpmmerce.Persistance
             {
                 querey = querey.OrderByDescending(spec.cretiria);
             }
+            if (spec.ispaginated )
+            {
+                querey = querey.Take(spec.take).Skip(spec.skip);
+            }
             if (spec.includes is not null)
             {
                 querey = spec.includes.Aggregate(querey, (currquery, ex) => currquery.Include(ex));

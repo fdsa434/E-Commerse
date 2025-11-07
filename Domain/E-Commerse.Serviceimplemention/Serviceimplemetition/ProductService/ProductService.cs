@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using E_Commers.Domain.Contracts.IUOW;
+using E_Commers.Domain.Exceptions;
 using E_Commers.Domain.Models.BrandModel;
 using E_Commers.Domain.Models.Products;
 using E_Commers.Domain.Models.Type_Model;
+using E_commerse.Shared;
 using E_commerse.Shared.DTOS.ProductDtos;
 using E_commerse.Shared.ProductQueryParam;
 using E_commerse.Shared.Sorting;
 using E_Commerse.ServiceAbstraction.IService.IProductService;
+using E_Commerse.Serviceimplemention.Specification;
 using Ecpmmerce.Persistance.Specification;
 using System;
 using System.Collections.Generic;
@@ -37,14 +40,34 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ProductService
         {
             var specification = new ProductSpecification(Id);
             var products = await unitOfWork.Gneraterepo<Product, int>().getallspecificationByidrepo(specification);
+            if (products is null)
+            {
+                throw new ProductNotFoundEX(Id);
+            }
             return mapper.Map<GetProductDto>(products);
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetProductService(ProductQueryParam param)
+        public async Task<PaginationResult<GetProductDto>> GetProductService(ProductQueryParam param)
         {
             var specification = new ProductSpecification(param);
             var product = await unitOfWork.Gneraterepo<Product, int>().getallspecificationrepo(specification);
-            return mapper.Map<IEnumerable<GetProductDto>>(product);
+           
+
+
+
+
+            var data= mapper.Map<IEnumerable<GetProductDto>>(product);
+
+
+
+
+            var countspec = new CountSpecification(param);
+            var productwithfilter = await unitOfWork.Gneraterepo<Product, int>().getcountspecificationrepo(countspec);
+            var size = product.Count();
+            var index = param.PageIndex;
+            var totalcount = productwithfilter;
+            return new PaginationResult<GetProductDto>(index, size, totalcount, data);
+
         }
 
         public async Task<IEnumerable<GetTypeDto>> GetProductTypeService()
