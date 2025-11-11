@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using E_Commers.Domain.Contracts.IUOW;
+using E_Commers.Domain.Contracts.Reposatory.BasketRepo;
+using E_Commerse.ServiceAbstraction.IService.IBasketService;
 using E_Commerse.ServiceAbstraction.IService.IProductService;
 using E_Commerse.ServiceAbstraction.IsurvaceManager;
 using Microsoft.IdentityModel.Tokens;
@@ -11,9 +13,14 @@ using System.Threading.Tasks;
 
 namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ServiceManager
 {
-    public class ServiceManager(IUnitOfWork _unitOfWork,IMapper mapper) : IserviceManager
+    public class ServiceManager(IUnitOfWork _unitOfWork,IMapper mapper, IBasketReposatory bas) : IserviceManager
     {
-        public readonly Lazy<IProductService> _productService =new Lazy<IProductService>(() => new ProductService.ProductService(_unitOfWork, mapper));
+        public readonly Lazy<IProductService> _productService = new Lazy<IProductService>(() => new ProductService.ProductService(_unitOfWork, mapper));
+        public readonly Lazy<IBasketService> _basketService = new Lazy<IBasketService>(() => new BasketService.BasketService(bas, mapper));
+
+
+        public IBasketService basktservice => _basketService.Value;
+
         public IProductService productservice => _productService.Value;
     }
     
