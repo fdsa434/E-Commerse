@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecpmmerce.Persistance.Migrations
 {
     [DbContext(typeof(StorDBContext))]
-    [Migration("20251025131437_product")]
-    partial class product
+    [Migration("20251113141958_oilm")]
+    partial class oilm
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace Ecpmmerce.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("brands");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("E_Commers.Domain.Models.Products.Product", b =>
@@ -48,6 +48,9 @@ namespace Ecpmmerce.Persistance.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -65,17 +68,14 @@ namespace Ecpmmerce.Persistance.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Typeid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("brandid")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Typeid");
+                    b.HasIndex("BrandId");
 
-                    b.HasIndex("brandid");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("products");
                 });
@@ -99,15 +99,15 @@ namespace Ecpmmerce.Persistance.Migrations
 
             modelBuilder.Entity("E_Commers.Domain.Models.Products.Product", b =>
                 {
-                    b.HasOne("E_Commers.Domain.Models.Type_Model.ProductType", "ProductType")
+                    b.HasOne("E_Commers.Domain.Models.BrandModel.Brand", "Productbrand")
                         .WithMany()
-                        .HasForeignKey("Typeid")
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("E_Commers.Domain.Models.BrandModel.Brand", "Productbrand")
+                    b.HasOne("E_Commers.Domain.Models.Type_Model.ProductType", "ProductType")
                         .WithMany()
-                        .HasForeignKey("brandid")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

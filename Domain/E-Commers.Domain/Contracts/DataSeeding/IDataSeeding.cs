@@ -9,5 +9,7 @@ namespace E_Commers.Domain.Contracts.DataSeeding
     public interface IDataSeeding
     {
         Task seedingAsync();
+        Task seedingidentityAsync();
+
     }
 }

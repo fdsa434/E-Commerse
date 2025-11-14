@@ -2,6 +2,7 @@
 using E_commerse.Shared.ProductQueryParam;
 using E_commerse.Shared.Sorting;
 using E_Commerse.ServiceAbstraction.IsurvaceManager;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace E_Commerse.Presentiton.Controllers.ProductController
 {
     [ApiController]
     [Route("Api/[Controller]")]
+    [Authorize]
+
     public class ProductController(IserviceManager servicemanager) : ControllerBase
     {
         [HttpGet]

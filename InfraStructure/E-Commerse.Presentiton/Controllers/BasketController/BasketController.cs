@@ -1,5 +1,6 @@
 ﻿using E_commerse.Shared.DTOS.BasketDtos;
 using E_Commerse.ServiceAbstraction.IsurvaceManager;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ namespace E_Commerse.Presentiton.Controllers.BasketController
 {
     [ApiController]
     [Route("Api/[Controller]")]
-    class BasketController(IserviceManager service):ControllerBase
+    [Authorize]
+    public class BasketController(IserviceManager service):ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<BasketDto>> getbasket(string key)

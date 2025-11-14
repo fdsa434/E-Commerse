@@ -10,6 +10,7 @@ namespace E_commerse.Shared.ErrorModels
     {
         public int statuscode { get; set; }
         public string massege { get; set; } = null!;
+       public  List<string>? errors { get; set; } = new List<string>();
 
     }
 }

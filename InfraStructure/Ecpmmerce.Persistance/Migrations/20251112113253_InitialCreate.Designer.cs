@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecpmmerce.Persistance.Migrations
 {
     [DbContext(typeof(StorDBContext))]
-    [Migration("20251026015249_pro")]
-    partial class pro
+    [Migration("20251112113253_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace Ecpmmerce.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("brands");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("E_Commers.Domain.Models.Products.Product", b =>

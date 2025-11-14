@@ -9,6 +9,7 @@ namespace E_Commers.Domain.Identity
 {
     public class Address
     {
+        public string id { get; set; }
         public string fname { get; set; } = null!;
         public string lname { get; set; } = null!;
         public string street { get; set; }

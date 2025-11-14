@@ -20,11 +20,16 @@ namespace Ecpmmerce.Persistance.Context.StorDBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+            modelBuilder.Entity<Brand>()
+         .Property(b => b.Id)
+         .ValueGeneratedOnAdd();
+            modelBuilder.Entity<ProductType>()
+        .Property(b => b.Id)
+        .ValueGeneratedOnAdd();
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(StorDBContext).Assembly);
         }
         public DbSet<Product> products { get; set; }
-        public DbSet<Brand> brands { get; set; }
+        public DbSet<Brand> Brands { get; set; }
         public DbSet<ProductType> types { get; set; }
 
     }

@@ -9,8 +9,7 @@ namespace E_Commers.Domain.Identity
 {
     public class ApplicationUser:IdentityUser
     {
-        public string Id { get; set; }
         public string displayname { get; set; } = null!;
-        public Address address { get; set; }
+        public Address? address { get; set; }
     }
 }

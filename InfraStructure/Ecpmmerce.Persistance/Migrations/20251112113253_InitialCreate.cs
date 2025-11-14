@@ -5,13 +5,13 @@
 namespace Ecpmmerce.Persistance.Migrations
 {
     /// <inheritdoc />
-    public partial class product : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "brands",
+                name: "Brands",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -20,7 +20,7 @@ namespace Ecpmmerce.Persistance.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_brands", x => x.Id);
+                    table.PrimaryKey("PK_Brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,35 +46,35 @@ namespace Ecpmmerce.Persistance.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    brandid = table.Column<int>(type: "int", nullable: false),
-                    Typeid = table.Column<int>(type: "int", nullable: false)
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_products_brands_brandid",
-                        column: x => x.brandid,
-                        principalTable: "brands",
+                        name: "FK_products_Brands_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brands",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_products_types_Typeid",
-                        column: x => x.Typeid,
+                        name: "FK_products_types_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_brandid",
+                name: "IX_products_BrandId",
                 table: "products",
-                column: "brandid");
+                column: "BrandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_Typeid",
+                name: "IX_products_TypeId",
                 table: "products",
-                column: "Typeid");
+                column: "TypeId");
         }
 
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace Ecpmmerce.Persistance.Migrations
                 name: "products");
 
             migrationBuilder.DropTable(
-                name: "brands");
+                name: "Brands");
 
             migrationBuilder.DropTable(
                 name: "types");
