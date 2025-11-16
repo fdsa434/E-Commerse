@@ -13,7 +13,7 @@ namespace E_Commerse.Presentiton.Controllers.BasketController
     [ApiController]
     [Route("Api/[Controller]")]
     [Authorize]
-    public class BasketController(IserviceManager service):ControllerBase
+        public class BasketController(IserviceManager service):ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<BasketDto>> getbasket(string key)
@@ -28,7 +28,7 @@ namespace E_Commerse.Presentiton.Controllers.BasketController
             return Ok(res);
         }
         [HttpDelete("{key}")]
-        public async Task<ActionResult<BasketDto>> Deletebasket(string key)
+        public async Task<ActionResult<bool>> Deletebasket(string key)
         {
             var res = await service.basktservice.deletBasketAsync(key);
             return Ok(res);

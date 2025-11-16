@@ -16,7 +16,7 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.BasketService
     {
         public async Task<BasketDto?> CreateOrUpdateBasketAsync(BasketDto Basket, TimeSpan? timetolive = null)
         {
-            var bas = mapper.Map<BasketCustomer>(Basket);
+            var bas = mapper.Map<BasketDto, BasketCustomer>(Basket);
             var addbs = await repo.CreateOrUpdateBasketAsync( bas);
             if (addbs is not null)
             {
@@ -35,7 +35,7 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.BasketService
 
         public async Task<BasketDto?> GetBasketAsync(string key)
         {
-            var basket = repo.GetBasketAsync(key);
+            var basket = await repo.GetBasketAsync(key);
             if(basket is not null)
             {
                return  mapper.Map<BasketDto>(basket);

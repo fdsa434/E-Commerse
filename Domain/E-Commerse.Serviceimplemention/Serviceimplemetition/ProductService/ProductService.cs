@@ -10,7 +10,9 @@ using E_commerse.Shared.ProductQueryParam;
 using E_commerse.Shared.Sorting;
 using E_Commerse.ServiceAbstraction.IService.IProductService;
 using E_Commerse.Serviceimplemention.Specification;
-using Ecpmmerce.Persistance.Specification;
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,11 +64,11 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.ProductService
 
 
             var countspec = new CountSpecification(param);
-            var productwithfilter = await unitOfWork.Gneraterepo<Product, int>().getcountspecificationrepo(countspec);
+           // var productwithfilter = await unitOfWork.Gneraterepo<Product, int>().getcountspecificationrepo(countspec);
             var size = product.Count();
             var index = param.PageIndex;
-            var totalcount = productwithfilter;
-            return new PaginationResult<GetProductDto>(index, size, totalcount, data);
+           // var totalcount = productwithfilter;
+            return new PaginationResult<GetProductDto>(index, size, size, data);
 
         }
 

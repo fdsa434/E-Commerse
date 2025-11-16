@@ -15,10 +15,11 @@ namespace E_Commerse.Presentiton.Controllers.ProductController
     [Route("Api/[Controller]")]
     [Authorize]
 
+
     public class ProductController(IserviceManager servicemanager) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetProductDto>>> getallproduct(ProductQueryParam param)
+        public async Task<ActionResult<IEnumerable<GetProductDto>>> getallproduct([FromQuery]ProductQueryParam param)
         {
             var res = await servicemanager.productservice.GetProductService( param);
             return Ok(res);

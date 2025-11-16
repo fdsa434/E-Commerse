@@ -27,59 +27,41 @@ namespace E_Commerse.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-          
+            // Controllers
             builder.Services.AddControllers();
 
-           
+            // Database Contexts
             builder.Services.AddDbContext<StorDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddDbContext<Identitydbcontext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("identityconnection")));
 
-         
+            // Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<Identitydbcontext>()
                 .AddDefaultTokenProviders();
 
-           
-
-            var jwtSettings = builder.Configuration.GetSection("Jwt");
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-
-                    ValidateAudience = true,
-                    ValidAudience = jwtSettings["Audience"],
-
-                    ValidateLifetime = true,
-
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtSettings["Key"]))
-                };
-            });
-
-          
+            // Dependency Injection
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IserviceManager, ServiceManager>();
             builder.Services.AddScoped<IBasketReposatory, BasketReposatory>();
 
-            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("localhost")));
+            // Redis
+            builder.Services.AddSingleton<IConnectionMultiplexer>((_) =>
+            {
+                return ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("redisdatabase"));
+            });
 
-            builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(ProductProfile).Assembly));
+            // AutoMapper
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile(new ProductProfile(builder.Configuration));
+                cfg.AddProfile(new BasketMappingProfile());
+            });
 
+            // API Validation Response
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.InvalidModelStateResponseFactory = context =>
@@ -101,9 +83,31 @@ namespace E_Commerse.Web
                 };
             });
 
-          
+            // JWT Authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecurityKey"])
+                    ),
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             var app = builder.Build();
 
+            // Data Seeding
             using (var scope = app.Services.CreateScope())
             {
                 var seedingService = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
@@ -111,11 +115,13 @@ namespace E_Commerse.Web
                 seedingService.seedingidentityAsync().GetAwaiter().GetResult();
             }
 
-           
+            // Middleware
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseAuthentication();   
+            app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

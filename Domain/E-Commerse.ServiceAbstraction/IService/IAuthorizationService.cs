@@ -13,9 +13,9 @@ namespace E_Commerse.ServiceAbstraction.IService
         //username/email/token
         public Task<UserReturnDto> LoginAsync(LoginDto dto);
         public Task<UserReturnDto> RegisetrAsync(RegisterDto dto);
-        public  Task<bool> CheckEmailExistsAsync(string email);
+        public Task<bool> CheckEmailExistsAsync(string email);
         public Task<UserReturnDto?> GetUserByEmailAsync(string email);
-        public  Task<UserAddressDto?> GetAddressByEmailAsync(string email);
+        public Task<UserAddressDto?> GetAddressByEmailAsync(string email);
         public Task<UserAddressUpdateDto?> UpdateAddressAsync(string email, UserAddressUpdateDto dto);
 
     }

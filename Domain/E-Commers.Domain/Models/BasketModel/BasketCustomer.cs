@@ -9,7 +9,7 @@ namespace E_Commers.Domain.Models.BasketModel
     public class BasketCustomer
     {
         public string Id { get; set; }
-        public ICollection<BasketItems>items  { get; set; }
+        public ICollection<BasketItems>items { get; set; }
 
     }
 }

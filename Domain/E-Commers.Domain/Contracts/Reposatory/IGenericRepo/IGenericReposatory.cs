@@ -13,7 +13,7 @@ namespace E_Commers.Domain.Contracts.Reposatory.IGenericRepo
     {
         public Task<IEnumerable<tentity>> getallrepo();
         public Task<IEnumerable<tentity>> getallspecificationrepo(ISpecification<tentity, tkey> spec);
-        public Task<int> getcountspecificationrepo(ISpecification<tentity, tkey> spec);
+       // public Task<int> getcountspecificationrepo(ISpecification<tentity, tkey> spec);
 
         public Task<tentity> getallspecificationByidrepo(ISpecification<tentity, tkey> spec);
 

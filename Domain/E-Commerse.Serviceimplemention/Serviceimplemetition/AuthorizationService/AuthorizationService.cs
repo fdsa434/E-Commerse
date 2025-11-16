@@ -21,7 +21,7 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.AuthorizationServi
     {
         public async Task<UserReturnDto> LoginAsync(LoginDto dto)
         {
-            var us = await usermanager.FindByEmailAsync(dto.email);
+            var us = await usermanager.FindByEmailAsync(dto.Email);
             if(us is not null)
             {
                 var flag = await usermanager.CheckPasswordAsync(us, dto.Password);
@@ -32,7 +32,7 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.AuthorizationServi
                     {
                         email = us.Email,
                         username = us.UserName,
-                        token = "gccd"
+                        token = await CreateTokenAsync(us)
                     };
                 }
                 else
@@ -74,27 +74,30 @@ namespace E_Commerse.Serviceimplemention.Serviceimplemetition.AuthorizationServi
         }
         private async Task<string> CreateTokenAsync(ApplicationUser user)
         {
-            var userClaims = await usermanager.GetClaimsAsync(user);
+            var claim = new List<Claim>()
+          {
+
+              new Claim(ClaimTypes.Name,user.UserName),
+              new Claim (ClaimTypes.Email,user.Email),
+              new Claim (ClaimTypes.HomePhone,user.PhoneNumber),
+          };
             var roles = await usermanager.GetRolesAsync(user);
-
-            var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
-            var securitykey = con.GetSection("Jwt")["SecurityKey"];
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(securitykey)
-            );
-
+            foreach (var role in roles)
+            {
+                claim.Add(new Claim(ClaimTypes.Role, role));
+            }
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(con.GetSection("Jwt")["SecurityKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var token = new JwtSecurityToken(
-                issuer: con.GetSection("Jwt")["Issuer"],
-                audience: con.GetSection("Jwt")["Audience"],
-                claims: userClaims,
-                expires: DateTime.UtcNow.AddHours(3),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+             issuer: con.GetSection("Jwt")["Issuer"],
+             audience: con.GetSection("Jwt")["Audience"],
+             claims: claim,
+             expires: DateTime.Now.AddHours(3),
+             signingCredentials: creds);
+            var tokenstring = new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenstring;
         }
+
         public async Task<bool> CheckEmailExistsAsync(string email)
         {
             var user = await usermanager.FindByEmailAsync(email);

@@ -12,6 +12,7 @@ namespace E_Commerse.Presentiton.Controllers.AuthenticationController
 {
     [ApiController]
     [Route("Api/[Controller]")]
+
     public class AuthenticationController(IserviceManager service):ControllerBase
     {
         [HttpPost("Login")]
@@ -30,7 +31,7 @@ namespace E_Commerse.Presentiton.Controllers.AuthenticationController
         public async Task<ActionResult<bool>> CheckEmail([FromQuery] string email)
         {
             var exists = await service.AuthorizationService.CheckEmailExistsAsync(email);
-            return Ok(new { emailExists = exists });
+            return Ok(exists);
         }
         [HttpGet("GetCurrentUser")]
         public async Task<ActionResult<UserReturnDto>> GetCurrentUser([FromQuery] string email)

@@ -22,11 +22,11 @@ namespace Ecpmmerce.Persistance
             }
             if (spec.OrderbuAsc is not null)
             {
-                querey = querey.OrderBy(spec.cretiria);
+                querey = querey.OrderBy(spec.OrderbuAsc);
             }
             if (spec.OrderbuDesc is not null)
             {
-                querey = querey.OrderByDescending(spec.cretiria);
+                querey = querey.OrderByDescending(spec.OrderbuDesc);
             }
             if (spec.ispaginated )
             {

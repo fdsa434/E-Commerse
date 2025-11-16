@@ -1,4 +1,5 @@
 ﻿using E_Commers.Domain.Contracts.Reposatory.BasketRepo;
+using E_Commers.Domain.Exceptions;
 using E_Commers.Domain.Models.BasketModel;
 using StackExchange.Redis;
 using System;
@@ -36,6 +37,8 @@ namespace Ecpmmerce.Persistance.Reposatory.GenericReposatoty
         public async Task<BasketCustomer?> GetBasketAsync(string key)
         {
             var basket = await redis.StringGetAsync(key);
+            if (basket.IsNullOrEmpty)
+                throw new BasketNotFoundEX(key);
             var basketjson = JsonSerializer.Deserialize<BasketCustomer>(basket);
             if(basketjson is null)
             {

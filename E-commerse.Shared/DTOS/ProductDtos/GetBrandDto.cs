@@ -9,6 +9,6 @@ namespace E_commerse.Shared.DTOS.ProductDtos
     public class GetBrandDto
     {
         public int Id { get; set; }
-        public string brandName { get; set; }
+        public string Name { get; set; }
     }
 }

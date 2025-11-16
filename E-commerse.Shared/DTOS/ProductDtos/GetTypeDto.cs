@@ -9,7 +9,7 @@ namespace E_commerse.Shared.DTOS.ProductDtos
     public class GetTypeDto
     {
         public int Id { get; set; }
-        public string TypeName { get; set; }
+        public string Name { get; set; }
 
     }
 }
